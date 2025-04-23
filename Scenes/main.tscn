@@ -1,0 +1,72 @@
+[gd_scene load_steps=5 format=3 uid="uid://chv2spywl4c7r"]
+
+[ext_resource type="Texture2D" uid="uid://c2gham3uuulty" path="res://icon.svg" id="1_fij0q"]
+[ext_resource type="PackedScene" uid="uid://brqwt8slfnbt6" path="res://Scenes/player.tscn" id="2_i0e0b"]
+[ext_resource type="Script" uid="uid://c1ji7x22rfcbr" path="res://Scripts/UI/ProgressBar.gd" id="3_8gbba"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_o352x"]
+size = Vector2(126.923, 126)
+
+[node name="Main" type="Node2D"]
+
+[node name="StaticBody2D" type="StaticBody2D" parent="."]
+position = Vector2(135, 580)
+scale = Vector2(2.08, 1)
+
+[node name="Ground" type="Sprite2D" parent="StaticBody2D"]
+texture = ExtResource("1_fij0q")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D"]
+shape = SubResource("RectangleShape2D_o352x")
+
+[node name="StaticBody2D2" type="StaticBody2D" parent="."]
+position = Vector2(395, 559)
+scale = Vector2(2.08, 1)
+
+[node name="Ground" type="Sprite2D" parent="StaticBody2D2"]
+texture = ExtResource("1_fij0q")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D2"]
+shape = SubResource("RectangleShape2D_o352x")
+
+[node name="StaticBody2D3" type="StaticBody2D" parent="."]
+position = Vector2(653, 577)
+scale = Vector2(2.08, 1)
+
+[node name="Ground" type="Sprite2D" parent="StaticBody2D3"]
+texture = ExtResource("1_fij0q")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D3"]
+shape = SubResource("RectangleShape2D_o352x")
+
+[node name="StaticBody2D4" type="StaticBody2D" parent="."]
+position = Vector2(912, 504)
+scale = Vector2(2.08, 1)
+
+[node name="Ground" type="Sprite2D" parent="StaticBody2D4"]
+texture = ExtResource("1_fij0q")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D4"]
+shape = SubResource("RectangleShape2D_o352x")
+
+[node name="StaticBody2D5" type="StaticBody2D" parent="."]
+position = Vector2(1173, 586)
+scale = Vector2(2.08, 1)
+
+[node name="Ground" type="Sprite2D" parent="StaticBody2D5"]
+texture = ExtResource("1_fij0q")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D5"]
+shape = SubResource("RectangleShape2D_o352x")
+
+[node name="Player" parent="." instance=ExtResource("2_i0e0b")]
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="ProgressBar" type="ProgressBar" parent="CanvasLayer" node_paths=PackedStringArray("player")]
+offset_left = 13.0
+offset_top = 13.0
+offset_right = 289.0
+offset_bottom = 87.0
+script = ExtResource("3_8gbba")
+player = NodePath("../../Player")
