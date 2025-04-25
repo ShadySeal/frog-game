@@ -1,9 +1,9 @@
 [gd_scene load_steps=6 format=3 uid="uid://chv2spywl4c7r"]
 
 [ext_resource type="Texture2D" uid="uid://c2gham3uuulty" path="res://icon.svg" id="1_fij0q"]
-[ext_resource type="PackedScene" uid="uid://brqwt8slfnbt6" path="res://Scenes/player.tscn" id="2_i0e0b"]
-[ext_resource type="Script" uid="uid://c1ji7x22rfcbr" path="res://Scripts/UI/progress_bar.gd" id="3_8gbba"]
-[ext_resource type="PackedScene" uid="uid://bikt5quqvokxt" path="res://Scenes/enemy.tscn" id="4_jjvhh"]
+[ext_resource type="PackedScene" uid="uid://brqwt8slfnbt6" path="res://scenes/player.tscn" id="2_i0e0b"]
+[ext_resource type="Script" uid="uid://c1ji7x22rfcbr" path="res://scripts/ui/progress_bar.gd" id="3_8gbba"]
+[ext_resource type="PackedScene" uid="uid://bikt5quqvokxt" path="res://scenes/enemy.tscn" id="4_jjvhh"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_o352x"]
 size = Vector2(126.923, 126)
@@ -41,7 +41,7 @@ texture = ExtResource("1_fij0q")
 shape = SubResource("RectangleShape2D_o352x")
 
 [node name="StaticBody2D4" type="StaticBody2D" parent="."]
-position = Vector2(912, 504)
+position = Vector2(912, 478)
 scale = Vector2(2.08, 1)
 
 [node name="Ground" type="Sprite2D" parent="StaticBody2D4"]
