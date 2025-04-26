@@ -13,18 +13,53 @@ var direction = 1
 var velocity_x = 0.0  # We'll interpolate this instead of setting velocity.x directly
 var original_position
 
+var tongue_area: Area2D = null
+var captured_offset: Vector2
+var launch_direction
+
+var release_time = 0.5
+
+enum State
+{
+	Patrol,
+	Captured,
+	Released
+}
+
+var current_state: State = State.Patrol
+
 func _ready() -> void:
 	original_position = transform.get_origin()
 
 func _physics_process(delta: float) -> void:
-	var target_velocity_x = speed * direction
-	velocity_x = lerp(velocity_x, target_velocity_x, acceleration * delta)
-	velocity.x = velocity_x
 	
-	if abs(position.x - original_position.x) >= max_distance:
-		direction = -1 if direction == 1 else 1
-		original_position.x = position.x
-	
+	match current_state:
+		State.Patrol:
+			var target_velocity_x = speed * direction
+			velocity_x = lerp(velocity_x, target_velocity_x, acceleration * delta)
+			velocity.x = velocity_x
+			
+			if abs(position.x - original_position.x) >= max_distance:
+				direction = -1 if direction == 1 else 1
+				original_position.x = position.x
+				
+		State.Captured:
+			velocity = Vector2.ZERO
+			$FireTimer.stop()
+			if tongue_area:
+				global_position = tongue_area.global_position + captured_offset
+				
+		State.Released:
+			visible = true
+			velocity.x = 300 * launch_direction
+			player.captured_enemy = null
+			release_time -= delta
+			if release_time <= 0:
+				$FireTimer.start()
+				player.loaded = false
+				release_time = 0.5
+				current_state = State.Patrol
+			
 	move_and_slide()
 
 func fire() -> void:
@@ -34,7 +69,29 @@ func fire() -> void:
 	projectile.pos = global_position
 	get_parent().add_child(projectile)
 
-
 func _on_fire_timer_timeout() -> void:
 	if global_position.distance_to(player.global_position) <= fire_range:
-			fire()
+		fire()
+
+func _on_area_2d_area_entered(area: Area2D) -> void:
+	if area.is_in_group("Enemy"):
+		kill()
+	
+	if current_state == State.Patrol:
+		if area.is_in_group("Tongue"):
+			current_state = State.Captured
+			tongue_area = area
+			captured_offset = global_position - tongue_area.global_position
+	elif current_state == State.Released:
+		if area.is_in_group("Obstacle"):
+			kill()
+
+func _on_player_release() -> void:
+	launch_direction = player.animated_sprite.scale.x
+	current_state = State.Released
+	position = player.position
+
+func kill():
+	player.captured_enemy = null
+	player.loaded = false
+	queue_free()
