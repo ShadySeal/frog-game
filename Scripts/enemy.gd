@@ -1,6 +1,8 @@
 extends CharacterBody2D
 
-var projectile_path = preload("res://Scenes/projectile.tscn")
+var projectile_path = preload("res://scenes/projectile.tscn")
+
+signal deal_damage(damage: float)
 
 @export var player: Player
 
@@ -76,9 +78,12 @@ func _on_fire_timer_timeout() -> void:
 func _on_area_2d_area_entered(area: Area2D) -> void:
 	if area.is_in_group("Enemy"):
 		kill()
+		
+	if area.is_in_group("Player") and current_state == State.Patrol:
+		area.get_parent().deal_damage(25)
 	
 	if current_state == State.Patrol:
-		if area.is_in_group("Tongue"):
+		if area.is_in_group("Tongue") and player.is_shooting:
 			current_state = State.Captured
 			tongue_area = area
 			captured_offset = global_position - tongue_area.global_position
@@ -93,5 +98,8 @@ func _on_player_release() -> void:
 
 func kill():
 	player.captured_enemy = null
-	player.loaded = false
 	queue_free()
+
+func _on_area_2d_body_entered(body: Node2D) -> void:
+	if body.is_in_group("Obstacle") and current_state == State.Released:
+		kill()

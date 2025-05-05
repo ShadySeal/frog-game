@@ -436,6 +436,7 @@ shape = SubResource("RectangleShape2D_0fvyk")
 [node name="Camera2D" type="Camera2D" parent="."]
 offset = Vector2(0, -50)
 zoom = Vector2(3.5, 3.5)
+position_smoothing_enabled = true
 
 [node name="PlayerAnimation" type="AnimationPlayer" parent="."]
 libraries = {
@@ -464,4 +465,5 @@ position = Vector2(-2, 0)
 shape = SubResource("RectangleShape2D_smehm")
 
 [connection signal="area_entered" from="Area2D" to="." method="_on_area_2d_area_entered"]
+[connection signal="body_entered" from="Area2D" to="." method="_on_area_2d_body_entered"]
 [connection signal="area_entered" from="AnimatedSprite2D/Tongue/TongueArea" to="." method="_on_tongue_area_area_entered"]

@@ -7,12 +7,16 @@ signal release
 
 var loaded = false
 
+@export var health = 100.0
 @export var speed = 300.0
 @export var min_jump_velocity = -400.0
 @export var max_jump_velocity = -800.0
 @export var shooting_speed = 100
 @export var shooting_range = 70
 @export var max_charge_time = 0.5  # Max time you can charge jump
+
+@onready var health_bar = $"../CanvasLayer/HealthBar"
+
 
 var gravity = ProjectSettings.get_setting("physics/2d/default_gravity")
 var jump_charge_time = 0.0
@@ -41,6 +45,7 @@ func _ready() -> void:
 	animated_sprite = $AnimatedSprite2D
 	animation_player = $PlayerAnimation
 	tongue = $AnimatedSprite2D/Tongue
+	health_bar.set_health_bar(health)
 
 func _physics_process(delta):
 	# Gravity
@@ -152,8 +157,10 @@ func shoot(delta) -> void:
 			is_emitting = true
 			current_state = State.Normal
 
-func _on_area_2d_area_entered(area: Area2D) -> void:
-	if area.is_in_group("Enemy") and not loaded or area.is_in_group("Projectile"):
+func deal_damage(amount: float) -> void:
+	health -= amount
+	health_bar.change_health(health)
+	if health <= 0:
 		call_deferred("reload_scene")
 
 func reload_scene():
@@ -161,6 +168,5 @@ func reload_scene():
 
 func _on_tongue_area_area_entered(area: Area2D) -> void:
 	if area.is_in_group("Enemy"):
-		loaded = true
 		captured_enemy = area.get_parent()
 		print(captured_enemy.name)

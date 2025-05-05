@@ -1,51 +1,95 @@
-[gd_scene load_steps=5 format=3 uid="uid://chv2spywl4c7r"]
+[gd_scene load_steps=12 format=3 uid="uid://chv2spywl4c7r"]
 
-[ext_resource type="PackedScene" uid="uid://bmwo1lpuuvxx3" path="res://scenes/test_cube.tscn" id="1_tbgi4"]
 [ext_resource type="PackedScene" uid="uid://brqwt8slfnbt6" path="res://scenes/player.tscn" id="2_i0e0b"]
-[ext_resource type="Script" uid="uid://c1ji7x22rfcbr" path="res://scripts/ui/progress_bar.gd" id="3_8gbba"]
+[ext_resource type="Script" uid="uid://ditb8ydup8klt" path="res://scripts/ui/health_bar.gd" id="2_tbgi4"]
+[ext_resource type="Script" uid="uid://c1ji7x22rfcbr" path="res://scripts/ui/charge_bar.gd" id="3_8gbba"]
 [ext_resource type="PackedScene" uid="uid://bikt5quqvokxt" path="res://scenes/enemy.tscn" id="4_jjvhh"]
+[ext_resource type="Texture2D" uid="uid://c1rq6vw1nfsh2" path="res://sprites/tiles/ground/grass_tileset.png" id="6_tefeu"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_o6xl0"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_tipki"]
+bg_color = Color(1, 1, 1, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_tbgi4"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_tefeu"]
+bg_color = Color(0, 1, 0, 1)
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_o6xl0"]
+texture = ExtResource("6_tefeu")
+texture_region_size = Vector2i(32, 32)
+0:0/0 = 0
+0:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, -16, 16, -16, 16, 16, -16, 16)
+1:0/0 = 0
+1:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, -16, 16, -16, 16, 16, -16, 16)
+2:0/0 = 0
+2:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, -16, 16, -16, 16, 16, -16, 16)
+0:1/0 = 0
+0:1/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, -16, 16, -16, 16, 16, -16, 16)
+1:1/0 = 0
+1:1/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, -16, 16, -16, 16, 16, -16, 16)
+2:1/0 = 0
+2:1/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, -16, 16, -16, 16, 16, -16, 16)
+0:2/0 = 0
+0:2/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, -16, 16, -16, 16, 16, -16, 16)
+1:2/0 = 0
+1:2/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, -16, 16, -16, 16, 16, -16, 16)
+2:2/0 = 0
+2:2/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, -16, 16, -16, 16, 16, -16, 16)
+
+[sub_resource type="TileSet" id="TileSet_tipki"]
+tile_size = Vector2i(32, 32)
+physics_layer_0/collision_layer = 1
+sources/11 = SubResource("TileSetAtlasSource_o6xl0")
 
 [node name="Main" type="Node2D"]
 
-[node name="TestCube" parent="." instance=ExtResource("1_tbgi4")]
-position = Vector2(63, 496)
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
 
-[node name="TestCube2" parent="." instance=ExtResource("1_tbgi4")]
-position = Vector2(190, 496)
+[node name="ChargeBar" type="ProgressBar" parent="CanvasLayer" node_paths=PackedStringArray("player")]
+texture_filter = 1
+offset_left = 12.0
+offset_top = 51.0
+offset_right = 297.0
+offset_bottom = 78.0
+theme_override_styles/background = SubResource("StyleBoxFlat_o6xl0")
+theme_override_styles/fill = SubResource("StyleBoxFlat_tipki")
+show_percentage = false
+script = ExtResource("3_8gbba")
+player = NodePath("../../Player")
 
-[node name="TestCube3" parent="." instance=ExtResource("1_tbgi4")]
-position = Vector2(316, 470)
+[node name="Label" type="Label" parent="CanvasLayer/ChargeBar"]
+layout_mode = 0
+offset_left = 10.0
+offset_top = 1.0
+offset_right = 97.0
+offset_bottom = 24.0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+text = "Jump Force"
 
-[node name="TestCube4" parent="." instance=ExtResource("1_tbgi4")]
-position = Vector2(443, 470)
+[node name="HealthBar" type="ProgressBar" parent="CanvasLayer"]
+texture_filter = 1
+offset_left = 12.0
+offset_top = 16.0
+offset_right = 297.0
+offset_bottom = 43.0
+theme_override_styles/background = SubResource("StyleBoxFlat_tbgi4")
+theme_override_styles/fill = SubResource("StyleBoxFlat_tefeu")
+show_percentage = false
+script = ExtResource("2_tbgi4")
 
-[node name="TestCube5" parent="." instance=ExtResource("1_tbgi4")]
-position = Vector2(570, 489)
-
-[node name="TestCube6" parent="." instance=ExtResource("1_tbgi4")]
-position = Vector2(697, 489)
-
-[node name="TestCube7" parent="." instance=ExtResource("1_tbgi4")]
-position = Vector2(697, 362)
-
-[node name="TestCube8" parent="." instance=ExtResource("1_tbgi4")]
-position = Vector2(824, 489)
-
-[node name="TestCube9" parent="." instance=ExtResource("1_tbgi4")]
-position = Vector2(951, 489)
+[node name="Label" type="Label" parent="CanvasLayer/HealthBar"]
+layout_mode = 0
+offset_left = 11.0
+offset_top = 1.0
+offset_right = 63.0
+offset_bottom = 24.0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+text = "Health"
 
 [node name="Player" parent="." instance=ExtResource("2_i0e0b")]
 position = Vector2(161, 415)
-
-[node name="CanvasLayer" type="CanvasLayer" parent="."]
-
-[node name="ProgressBar" type="ProgressBar" parent="CanvasLayer" node_paths=PackedStringArray("player")]
-offset_left = 13.0
-offset_top = 13.0
-offset_right = 289.0
-offset_bottom = 87.0
-script = ExtResource("3_8gbba")
-player = NodePath("../../Player")
 
 [node name="Enemy" parent="." node_paths=PackedStringArray("player") instance=ExtResource("4_jjvhh")]
 position = Vector2(365, 363)
@@ -58,5 +102,12 @@ player = NodePath("../Player")
 [node name="Enemy3" parent="." node_paths=PackedStringArray("player") instance=ExtResource("4_jjvhh")]
 position = Vector2(928, 372)
 player = NodePath("../Player")
+
+[node name="TileMap" type="TileMap" parent="." groups=["Obstacle"]]
+texture_filter = 1
+position = Vector2(-12, -3)
+tile_set = SubResource("TileSet_tipki")
+format = 2
+layer_0/tile_data = PackedInt32Array(917504, 11, 0, 917505, 65547, 0, 917506, 65547, 0, 917507, 65547, 0, 917508, 65547, 0, 917509, 65547, 0, 917510, 65547, 0, 851975, 11, 1, 786439, 11, 0, 786440, 65547, 0, 786441, 131083, 0, 851977, 131083, 1, 917513, 131083, 1, 983049, 131083, 1, 1048585, 131083, 1, 1114121, 131083, 2, 1114120, 65547, 2, 1114119, 65547, 2, 1114118, 65547, 2, 1114117, 65547, 2, 1114116, 65547, 2, 1114115, 65547, 2, 1114114, 65547, 2, 1114113, 65547, 2, 1114112, 11, 2, 1048576, 11, 1, 983040, 11, 1, 983041, 65547, 1, 983042, 65547, 1, 983043, 65547, 1, 983044, 65547, 1, 983045, 65547, 1, 983046, 65547, 1, 983047, 65547, 1, 917511, 65547, 1, 917512, 65547, 1, 851976, 65547, 1, 983048, 65547, 1, 1048584, 65547, 1, 1048583, 65547, 1, 1048582, 65547, 1, 1048581, 65547, 1, 1048580, 65547, 1, 1048579, 65547, 1, 1048578, 65547, 1, 1048577, 65547, 1, 917515, 11, 0, 917516, 65547, 0, 917517, 65547, 0, 917518, 65547, 0, 917519, 65547, 0, 917520, 65547, 0, 917521, 65547, 0, 917522, 65547, 0, 917523, 65547, 0, 917524, 65547, 0, 917525, 65547, 0, 917526, 65547, 0, 917527, 65547, 0, 917528, 65547, 0, 917529, 65547, 0, 917530, 65547, 0, 917531, 65547, 0, 917532, 65547, 0, 917533, 65547, 0, 917534, 65547, 0, 917535, 65547, 0, 917536, 131083, 0, 983072, 131083, 1, 1048608, 131083, 1, 1114144, 131083, 2, 983051, 11, 1, 1048587, 11, 1, 1114123, 11, 2, 1114124, 65547, 2, 1114125, 65547, 2, 1114126, 65547, 2, 1114127, 65547, 2, 1114128, 65547, 2, 1114129, 65547, 2, 1114130, 65547, 2, 1114131, 65547, 2, 1114132, 65547, 2, 1114133, 65547, 2, 1114134, 65547, 2, 1114135, 65547, 2, 1114136, 65547, 2, 1114137, 65547, 2, 1114138, 65547, 2, 1114139, 65547, 2, 1114140, 65547, 2, 1114141, 65547, 2, 1114142, 65547, 2, 1114143, 65547, 2, 983052, 65547, 1, 983053, 65547, 1, 983054, 65547, 1, 983055, 65547, 1, 983056, 65547, 1, 983057, 65547, 1, 983058, 65547, 1, 983059, 65547, 1, 983060, 65547, 1, 983061, 65547, 1, 983062, 65547, 1, 983063, 65547, 1, 983064, 65547, 1, 983065, 65547, 1, 983066, 65547, 1, 983067, 65547, 1, 983068, 65547, 1, 983069, 65547, 1, 983070, 65547, 1, 983071, 65547, 1, 1048607, 65547, 1, 1048606, 65547, 1, 1048605, 65547, 1, 1048604, 65547, 1, 1048603, 65547, 1, 1048602, 65547, 1, 1048601, 65547, 1, 1048600, 65547, 1, 1048599, 65547, 1, 1048598, 65547, 1, 1048597, 65547, 1, 1048596, 65547, 1, 1048595, 65547, 1, 1048594, 65547, 1, 1048593, 65547, 1, 1048592, 65547, 1, 1048591, 65547, 1, 1048590, 65547, 1, 1048589, 65547, 1, 1048588, 65547, 1)
 
 [connection signal="release" from="Player" to="Enemy" method="_on_player_release"]
