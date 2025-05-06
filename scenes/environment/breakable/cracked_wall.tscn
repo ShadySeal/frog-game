@@ -1,0 +1,15 @@
+[gd_scene load_steps=3 format=3 uid="uid://buiyf44jcxso2"]
+
+[ext_resource type="Texture2D" uid="uid://lyw5kqls458w" path="res://sprites/tiles/walls/breakable/brick_wall_cracked.png" id="1_cw5t4"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_b3v1w"]
+size = Vector2(32, 32)
+
+[node name="CrackedWall" type="StaticBody2D" groups=["Breakable"]]
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture_filter = 1
+texture = ExtResource("1_cw5t4")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." groups=["Breakable"]]
+shape = SubResource("RectangleShape2D_b3v1w")

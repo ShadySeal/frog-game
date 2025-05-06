@@ -3,7 +3,6 @@ extends CharacterBody2D
 class_name Player
 
 signal charge_updated(percent: float)
-signal release
 
 var loaded = false
 
@@ -151,7 +150,7 @@ func shoot(delta) -> void:
 						current_state = State.Loaded
 		
 		State.Loaded:
-			emit_signal("release")
+			captured_enemy.release()
 			animation_player.play("shoot")
 			is_shooting = true
 			is_emitting = true
@@ -162,6 +161,11 @@ func deal_damage(amount: float) -> void:
 	health_bar.change_health(health)
 	if health <= 0:
 		call_deferred("reload_scene")
+		
+func heal(amount: float) -> void:
+	if health < health_bar.max_value:
+		health += amount
+		health_bar.change_health(health)
 
 func reload_scene():
 	get_tree().reload_current_scene()
@@ -170,3 +174,4 @@ func _on_tongue_area_area_entered(area: Area2D) -> void:
 	if area.is_in_group("Enemy"):
 		captured_enemy = area.get_parent()
 		print(captured_enemy.name)
+		

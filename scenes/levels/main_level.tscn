@@ -1,0 +1,124 @@
+[gd_scene load_steps=15 format=4 uid="uid://chv2spywl4c7r"]
+
+[ext_resource type="Script" uid="uid://c1ji7x22rfcbr" path="res://scripts/ui/charge_bar.gd" id="1_h35hl"]
+[ext_resource type="Script" uid="uid://ditb8ydup8klt" path="res://scripts/ui/health_bar.gd" id="2_kwk8y"]
+[ext_resource type="Texture2D" uid="uid://be8lro6ua3pt5" path="res://sprites/tiles/walls/brick_wall.png" id="3_c7w6w"]
+[ext_resource type="Texture2D" uid="uid://c1rq6vw1nfsh2" path="res://sprites/tiles/ground/grass_tileset.png" id="4_erkku"]
+[ext_resource type="PackedScene" uid="uid://brqwt8slfnbt6" path="res://scenes/player/player.tscn" id="5_63vgv"]
+[ext_resource type="PackedScene" uid="uid://bikt5quqvokxt" path="res://scenes/environment/enemies/fly/fly.tscn" id="6_g2oho"]
+[ext_resource type="PackedScene" uid="uid://w1jtuhftrbqb" path="res://scenes/environment/items/heart.tscn" id="8_pmkt5"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_o6xl0"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_tipki"]
+bg_color = Color(1, 1, 1, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_tbgi4"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_tefeu"]
+bg_color = Color(0, 1, 0, 1)
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_85g3d"]
+texture = ExtResource("3_c7w6w")
+texture_region_size = Vector2i(32, 32)
+0:0/0 = 0
+0:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, -16, 16, -16, 16, 16, -16, 16)
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_o6xl0"]
+texture = ExtResource("4_erkku")
+texture_region_size = Vector2i(32, 32)
+0:0/0 = 0
+0:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, -16, 16, -16, 16, 16, -16, 16)
+1:0/0 = 0
+1:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, -16, 16, -16, 16, 16, -16, 16)
+2:0/0 = 0
+2:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, -16, 16, -16, 16, 16, -16, 16)
+0:1/0 = 0
+0:1/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, -16, 16, -16, 16, 16, -16, 16)
+1:1/0 = 0
+1:1/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, -16, 16, -16, 16, 16, -16, 16)
+2:1/0 = 0
+2:1/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, -16, 16, -16, 16, 16, -16, 16)
+0:2/0 = 0
+0:2/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, -16, 16, -16, 16, 16, -16, 16)
+1:2/0 = 0
+1:2/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, -16, 16, -16, 16, 16, -16, 16)
+2:2/0 = 0
+2:2/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, -16, 16, -16, 16, 16, -16, 16)
+
+[sub_resource type="TileSet" id="TileSet_tipki"]
+tile_size = Vector2i(32, 32)
+physics_layer_0/collision_layer = 1
+sources/1 = SubResource("TileSetAtlasSource_o6xl0")
+sources/0 = SubResource("TileSetAtlasSource_85g3d")
+
+[node name="MainLevel" type="Node2D"]
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="ChargeBar" type="ProgressBar" parent="CanvasLayer" node_paths=PackedStringArray("player")]
+texture_filter = 1
+offset_left = 12.0
+offset_top = 51.0
+offset_right = 297.0
+offset_bottom = 78.0
+theme_override_styles/background = SubResource("StyleBoxFlat_o6xl0")
+theme_override_styles/fill = SubResource("StyleBoxFlat_tipki")
+show_percentage = false
+script = ExtResource("1_h35hl")
+player = NodePath("../../Player")
+
+[node name="Label" type="Label" parent="CanvasLayer/ChargeBar"]
+layout_mode = 0
+offset_left = 10.0
+offset_top = 1.0
+offset_right = 97.0
+offset_bottom = 24.0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+text = "Jump Force"
+
+[node name="HealthBar" type="ProgressBar" parent="CanvasLayer"]
+texture_filter = 1
+offset_left = 12.0
+offset_top = 16.0
+offset_right = 297.0
+offset_bottom = 43.0
+theme_override_styles/background = SubResource("StyleBoxFlat_tbgi4")
+theme_override_styles/fill = SubResource("StyleBoxFlat_tefeu")
+show_percentage = false
+script = ExtResource("2_kwk8y")
+
+[node name="Label" type="Label" parent="CanvasLayer/HealthBar"]
+layout_mode = 0
+offset_left = 11.0
+offset_top = 1.0
+offset_right = 63.0
+offset_bottom = 24.0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+text = "Health"
+
+[node name="TileMap" type="Node" parent="."]
+
+[node name="Environment" type="TileMapLayer" parent="TileMap" groups=["Obstacle"]]
+texture_filter = 1
+use_parent_material = true
+tile_map_data = PackedByteArray("AAD6//v/AQACAAEAAAD7//z/AQABAAAAAAD6//z/AQABAAEAAAD6//r/AQACAAEAAAD6//n/AQACAAEAAAD6//j/AQACAAEAAAD6//f/AQACAAEAAAD6//b/AQACAAEAAAD6//X/AQACAAEAAAD6//T/AQACAAEAAAD6//P/AQACAAEAAAD6//L/AQACAAEAAAD6//H/AQACAAEAAAD6//D/AQACAAEAAAD8//z/AQABAAAAAAD9//z/AQABAAAAAAD+//z/AQABAAAAAAD///z/AQABAAAAAAAAAPz/AQABAAAAAAABAPz/AQABAAAAAAACAPz/AQABAAAAAAD6/+//AQACAAEAAAD6/+7/AQACAAEAAAD6/+3/AQACAAEAAAD6/+z/AQACAAEAAAD6/+v/AQACAAEAAAD5//v/AQABAAEAAAD4//v/AQABAAEAAAD3//v/AQABAAEAAAD2//v/AQABAAEAAAD1//v/AQABAAEAAAD0//v/AQABAAEAAADz//v/AQABAAEAAADy//v/AQABAAEAAADx//v/AQABAAEAAAD5//z/AQABAAEAAAD4//z/AQABAAEAAAD3//z/AQABAAEAAAD2//z/AQABAAEAAAD1//z/AQABAAEAAAD0//z/AQABAAEAAADz//z/AQABAAEAAADy//z/AQABAAEAAADx//z/AQABAAEAAAD///3/AQABAAEAAAD///7/AQABAAEAAAD/////AQABAAEAAAD+////AQABAAEAAAD9////AQABAAEAAAD8////AQABAAEAAAD7////AQABAAEAAAD6////AQABAAEAAAD5////AQABAAEAAAD4////AQABAAEAAAD3////AQABAAEAAAD2////AQABAAEAAAD1////AQABAAEAAAD0////AQABAAEAAADz////AQABAAEAAADy////AQABAAEAAADx////AQABAAEAAADx//7/AQABAAEAAADx//3/AQABAAEAAADy//3/AQABAAEAAADz//3/AQABAAEAAAD0//3/AQABAAEAAAD1//3/AQABAAEAAAD2//3/AQABAAEAAAD3//3/AQABAAEAAAD4//3/AQABAAEAAAD5//3/AQABAAEAAAD6//3/AQABAAEAAAD7//3/AQABAAEAAAD8//3/AQABAAEAAAD9//3/AQABAAEAAAD+//3/AQABAAEAAAD+//7/AQABAAEAAAD9//7/AQABAAEAAAD8//7/AQABAAEAAAD7//7/AQABAAEAAAD6//7/AQABAAEAAAD5//7/AQABAAEAAAD4//7/AQABAAEAAAD3//7/AQABAAEAAAD2//7/AQABAAEAAAD1//7/AQABAAEAAAD0//7/AQABAAEAAADz//7/AQABAAEAAADy//7/AQABAAEAAAAAAP3/AQABAAEAAAABAP3/AQABAAEAAAACAP3/AQABAAEAAAACAP7/AQABAAEAAAABAP7/AQABAAEAAAAAAP7/AQABAAEAAAAAAP//AQABAAEAAAABAP//AQABAAEAAAACAP//AQABAAEAAAD5//r/AQABAAEAAAD5//n/AQABAAEAAAD5//j/AQABAAEAAAD5//f/AQABAAEAAAD5//b/AQABAAEAAAD5//X/AQABAAEAAAD5//T/AQABAAEAAAD5//P/AQABAAEAAAD5//L/AQABAAEAAAD5//H/AQABAAEAAAD5//D/AQABAAEAAAD5/+//AQABAAEAAAD5/+7/AQABAAEAAAD5/+3/AQABAAEAAAD5/+z/AQABAAEAAAD5/+v/AQABAAEAAAD4/+v/AQABAAEAAAD3/+v/AQABAAEAAAD2/+v/AQABAAEAAAD1/+v/AQABAAEAAAD0/+v/AQABAAEAAADz/+v/AQABAAEAAADy/+v/AQABAAEAAADx/+v/AQABAAEAAADx/+z/AQABAAEAAADx/+3/AQABAAEAAADx/+7/AQABAAEAAADx/+//AQABAAEAAADx//D/AQABAAEAAADx//H/AQABAAEAAADx//L/AQABAAEAAADx//P/AQABAAEAAADx//T/AQABAAEAAADx//X/AQABAAEAAADx//b/AQABAAEAAADx//f/AQABAAEAAADx//j/AQABAAEAAADx//n/AQABAAEAAADx//r/AQABAAEAAADy//r/AQABAAEAAADz//r/AQABAAEAAAD0//r/AQABAAEAAAD1//r/AQABAAEAAAD2//r/AQABAAEAAAD3//r/AQABAAEAAAD4//r/AQABAAEAAAD3//n/AQABAAEAAAD2//n/AQABAAEAAAD1//n/AQABAAEAAAD0//n/AQABAAEAAADz//n/AQABAAEAAADy//n/AQABAAEAAAD4//n/AQABAAEAAAD4//j/AQABAAEAAAD3//j/AQABAAEAAAD2//j/AQABAAEAAAD1//j/AQABAAEAAAD0//j/AQABAAEAAADz//j/AQABAAEAAADy//j/AQABAAEAAAD0//f/AQABAAEAAAD1//f/AQABAAEAAAD2//f/AQABAAEAAAD3//f/AQABAAEAAAD4//f/AQABAAEAAADz//f/AQABAAEAAADy//f/AQABAAEAAADy//b/AQABAAEAAADy//X/AQABAAEAAADy//T/AQABAAEAAADy//P/AQABAAEAAADy//L/AQABAAEAAADy//H/AQABAAEAAADy//D/AQABAAEAAADy/+//AQABAAEAAADy/+7/AQABAAEAAADy/+3/AQABAAEAAADy/+z/AQABAAEAAADz/+z/AQABAAEAAAD0/+z/AQABAAEAAAD1/+z/AQABAAEAAAD2/+z/AQABAAEAAAD3/+z/AQABAAEAAAD4/+z/AQABAAEAAAD4/+3/AQABAAEAAAD3/+3/AQABAAEAAAD2/+3/AQABAAEAAAD1/+3/AQABAAEAAAD0/+3/AQABAAEAAADz/+3/AQABAAEAAAD1/+7/AQABAAEAAAD2/+7/AQABAAEAAAD3/+7/AQABAAEAAAD4/+7/AQABAAEAAAD4/+//AQABAAEAAAD3/+//AQABAAEAAAD2/+//AQABAAEAAAD1/+//AQABAAEAAAD0/+//AQABAAEAAADz/+//AQABAAEAAADz/+7/AQABAAEAAAD0/+7/AQABAAEAAADz//D/AQABAAEAAAD0//H/AQABAAEAAAD0//L/AQABAAEAAAD1//P/AQABAAEAAAD1//T/AQABAAEAAAD1//X/AQABAAEAAAD0//P/AQABAAEAAADz//H/AQABAAEAAAD0//T/AQABAAEAAAD0//X/AQABAAEAAADz//X/AQABAAEAAADz//T/AQABAAEAAADz//P/AQABAAEAAADz//L/AQABAAEAAADz//b/AQABAAEAAAD0//b/AQABAAEAAAD1//b/AQABAAEAAAD2//b/AQABAAEAAAD3//b/AQABAAEAAAD3//X/AQABAAEAAAD4//X/AQABAAEAAAD4//T/AQABAAEAAAD4//b/AQABAAEAAAD4//P/AQABAAEAAAD4//L/AQABAAEAAAD4//H/AQABAAEAAAD4//D/AQABAAEAAAD3//D/AQABAAEAAAD2//D/AQABAAEAAAD1//D/AQABAAEAAAD0//D/AQABAAEAAAD1//H/AQABAAEAAAD2//H/AQABAAEAAAD3//H/AQABAAEAAAD3//L/AQABAAEAAAD2//L/AQABAAEAAAD1//L/AQABAAEAAAD2//P/AQABAAEAAAD3//P/AQABAAEAAAD3//T/AQABAAEAAAD2//T/AQABAAEAAAD2//X/AQABAAEAAAADAPz/AQABAAAAAAAEAPz/AQABAAEAAAAFAPz/AQABAAEAAAAGAPz/AQABAAEAAAAHAPz/AQABAAEAAAAEAPv/AQAAAAAAAAADAP3/AQABAAEAAAADAP7/AQABAAEAAAADAP//AQABAAEAAAAEAP//AQABAAEAAAAFAP//AQABAAEAAAAGAP//AQABAAEAAAAHAP//AQABAAEAAAAHAP7/AQABAAEAAAAHAP3/AQABAAEAAAAGAP3/AQABAAEAAAAFAP3/AQABAAEAAAAEAP3/AQABAAEAAAAEAP7/AQABAAEAAAAFAP7/AQABAAEAAAAGAP7/AQABAAEAAAAFAPv/AQABAAAAAAAGAPv/AQABAAAAAAAHAPv/AQABAAAAAAAIAPv/AQABAAAAAAAJAPv/AQABAAAAAAAKAPv/AQABAAAAAAAIAPz/AQABAAEAAAAJAPz/AQABAAEAAAAKAPz/AQABAAEAAAAJAP3/AQABAAEAAAAIAP3/AQABAAEAAAAIAP7/AQABAAEAAAAIAP//AQABAAEAAAAJAP//AQABAAEAAAAJAP7/AQABAAEAAAAKAP7/AQABAAEAAAAKAP3/AQABAAEAAAAKAP//AQABAAEAAAALAPv/AQABAAAAAAAMAPv/AQABAAAAAAANAPv/AQABAAAAAAAOAPv/AQABAAAAAAAPAPr/AQAAAAEAAAAPAPn/AQAAAAEAAAAPAPj/AQAAAAEAAAAPAPf/AQAAAAAAAAAQAPf/AQABAAAAAAAQAPj/AQABAAEAAAARAPj/AQACAAEAAAARAPn/AQACAAEAAAAQAPn/AQABAAEAAAAQAPr/AQABAAEAAAARAPr/AQACAAEAAAAPAPv/AQABAAEAAAAQAPv/AQABAAEAAAARAPv/AQABAAEAAAASAPv/AQABAAAAAAATAPv/AQABAAAAAAALAPz/AQABAAEAAAAMAPz/AQABAAEAAAANAPz/AQABAAEAAAAOAPz/AQABAAEAAAAPAPz/AQABAAEAAAAQAPz/AQABAAEAAAARAPz/AQABAAEAAAASAPz/AQABAAEAAAATAPz/AQABAAEAAAATAP3/AQABAAEAAAASAP3/AQABAAEAAAARAP3/AQABAAEAAAAQAP3/AQABAAEAAAAPAP3/AQABAAEAAAAOAP3/AQABAAEAAAANAP3/AQABAAEAAAAMAP3/AQABAAEAAAALAP3/AQABAAEAAAALAP7/AQABAAEAAAAMAP7/AQABAAEAAAANAP7/AQABAAEAAAAOAP7/AQABAAEAAAAPAP7/AQABAAEAAAAQAP7/AQABAAEAAAARAP7/AQABAAEAAAASAP7/AQABAAEAAAATAP7/AQABAAEAAAATAP//AQABAAEAAAASAP//AQABAAEAAAARAP//AQABAAEAAAAQAP//AQABAAEAAAAPAP//AQABAAEAAAAOAP//AQABAAEAAAANAP//AQABAAEAAAAMAP//AQABAAEAAAALAP//AQABAAEAAAARAPf/AQACAAAAAAA=")
+tile_set = SubResource("TileSet_tipki")
+
+[node name="Player" parent="." instance=ExtResource("5_63vgv")]
+position = Vector2(-7, -137)
+
+[node name="Environment" type="Node" parent="."]
+
+[node name="Enemies" type="Node" parent="Environment"]
+
+[node name="Fly" parent="Environment/Enemies" node_paths=PackedStringArray("player") instance=ExtResource("6_g2oho")]
+position = Vector2(307, -222)
+player = NodePath("../../../Player")
+
+[node name="Items" type="Node" parent="Environment"]
+
+[node name="Heart" parent="Environment/Items" instance=ExtResource("8_pmkt5")]
+position = Vector2(530, -294)
+
+[node name="Breakable" type="Node" parent="Environment"]

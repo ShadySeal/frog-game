@@ -1,6 +1,6 @@
 extends CharacterBody2D
 
-var projectile_path = preload("res://scenes/projectile.tscn")
+var projectile_path = preload("res://scenes/environment/enemies/fly/projectile.tscn")
 
 signal deal_damage(damage: float)
 
@@ -10,6 +10,7 @@ signal deal_damage(damage: float)
 @export var acceleration = 1.0  # Higher means snappier
 @export var max_distance = 100
 @export var fire_range = 400
+@export var launch_speed = 300
 
 var direction = 1
 var velocity_x = 0.0  # We'll interpolate this instead of setting velocity.x directly
@@ -53,7 +54,7 @@ func _physics_process(delta: float) -> void:
 				
 		State.Released:
 			visible = true
-			velocity.x = 300 * launch_direction
+			velocity.x = launch_speed * launch_direction
 			player.captured_enemy = null
 			release_time -= delta
 			if release_time <= 0:
@@ -77,7 +78,8 @@ func _on_fire_timer_timeout() -> void:
 
 func _on_area_2d_area_entered(area: Area2D) -> void:
 	if area.is_in_group("Enemy"):
-		kill()
+		if area.get_parent().current_state == State.Released:
+			kill()
 		
 	if area.is_in_group("Player") and current_state == State.Patrol:
 		area.get_parent().deal_damage(25)
@@ -90,8 +92,10 @@ func _on_area_2d_area_entered(area: Area2D) -> void:
 	elif current_state == State.Released:
 		if area.is_in_group("Obstacle"):
 			kill()
-
-func _on_player_release() -> void:
+		if area.is_in_group("Enemy"):
+			kill()
+	
+func release() -> void:
 	launch_direction = player.animated_sprite.scale.x
 	current_state = State.Released
 	position = player.position
@@ -101,5 +105,9 @@ func kill():
 	queue_free()
 
 func _on_area_2d_body_entered(body: Node2D) -> void:
-	if body.is_in_group("Obstacle") and current_state == State.Released:
-		kill()
+	if current_state == State.Released:
+		if body.is_in_group("Obstacle"):
+			kill()
+		elif body.is_in_group("Breakable"):
+			body.queue_free()
+			kill()
