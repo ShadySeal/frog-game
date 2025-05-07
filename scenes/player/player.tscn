@@ -435,7 +435,7 @@ shape = SubResource("RectangleShape2D_0fvyk")
 
 [node name="Camera2D" type="Camera2D" parent="."]
 offset = Vector2(0, -50)
-zoom = Vector2(3.5, 3.5)
+zoom = Vector2(0.625, 0.625)
 position_smoothing_enabled = true
 
 [node name="PlayerAnimation" type="AnimationPlayer" parent="."]
