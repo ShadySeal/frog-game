@@ -91,6 +91,7 @@ func _physics_process(delta):
 			is_shooting = true
 		else:
 			shoot(delta)
+			$Audio/Emit.play()
 	
 	if is_shooting and not is_emitting:
 		shoot(delta)
@@ -167,8 +168,8 @@ func deal_damage(amount: float) -> void:
 		call_deferred("reload_scene")
 		
 func heal(amount: float) -> void:
+	$Audio/Heal.play()
 	if health < health_bar.max_value:
-		$Audio/Heal.play()
 		health += amount
 		health_bar.change_health(health)
 

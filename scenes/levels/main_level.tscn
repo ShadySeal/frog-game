@@ -164,8 +164,8 @@ texture = ExtResource("5_pmkt5")
 centered = false
 
 [node name="Mountains" type="ParallaxLayer" parent="ParallaxBackground"]
-position = Vector2(0, -87)
-motion_scale = Vector2(0.5, 0.5)
+position = Vector2(0, -25)
+motion_scale = Vector2(0.3, 0.3)
 motion_mirroring = Vector2(640, 0)
 
 [node name="Sprite2D" type="Sprite2D" parent="ParallaxBackground/Mountains"]
