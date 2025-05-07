@@ -55,6 +55,7 @@ func _physics_process(delta):
 	if is_on_floor():
 		if Input.is_action_just_pressed("Jump"):
 			velocity.y = min_jump_velocity
+			$Audio/Jump.play()
 		
 		if Input.is_action_pressed("Crouch"):
 			charging_jump = true
@@ -68,6 +69,7 @@ func _physics_process(delta):
 			velocity.y = lerp(min_jump_velocity, max_jump_velocity, charge_percent)
 			charging_jump = false
 			jump_charge_time = 0.0
+			$Audio/Jump.play()
 		else:
 			# Reset if not holding
 			charging_jump = false
@@ -85,6 +87,7 @@ func _physics_process(delta):
 	
 	if Input.is_action_just_pressed("Fire"):
 		if current_state == State.Normal:
+			$Audio/Shoot.play()
 			is_shooting = true
 		else:
 			shoot(delta)
@@ -159,11 +162,13 @@ func shoot(delta) -> void:
 func deal_damage(amount: float) -> void:
 	health -= amount
 	health_bar.change_health(health)
+	$Audio/Damage.play()
 	if health <= 0:
 		call_deferred("reload_scene")
 		
 func heal(amount: float) -> void:
 	if health < health_bar.max_value:
+		$Audio/Heal.play()
 		health += amount
 		health_bar.change_health(health)
 

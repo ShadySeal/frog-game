@@ -1,4 +1,4 @@
-[gd_scene load_steps=33 format=3 uid="uid://brqwt8slfnbt6"]
+[gd_scene load_steps=37 format=3 uid="uid://brqwt8slfnbt6"]
 
 [ext_resource type="Script" uid="uid://dtv4g5abye6jg" path="res://scripts/player/player_movement.gd" id="1_263iy"]
 [ext_resource type="Texture2D" uid="uid://c5p05vxpaojq7" path="res://sprites/frog/frog_idle.png" id="2_cvnsp"]
@@ -11,6 +11,10 @@
 [ext_resource type="Texture2D" uid="uid://bqode5cd5riv8" path="res://sprites/frog/frog_tongue.png" id="7_fjrip"]
 [ext_resource type="Texture2D" uid="uid://c0juniya3spok" path="res://sprites/frog/frog_jump_loaded.png" id="7_jej6c"]
 [ext_resource type="Texture2D" uid="uid://b5qr1icr1q3tl" path="res://sprites/frog/frog_walk_loaded.png" id="10_f1ej7"]
+[ext_resource type="AudioStream" uid="uid://bu868c6jxocwq" path="res://audio/player/player_jump.mp3" id="12_fm80t"]
+[ext_resource type="AudioStream" uid="uid://d3lbkk2lgsdm6" path="res://audio/player/shoot.wav" id="13_gx1jg"]
+[ext_resource type="AudioStream" uid="uid://ddnhvqv1016vo" path="res://audio/player/player_heal.wav" id="14_ugbui"]
+[ext_resource type="AudioStream" uid="uid://b8a6nfvr3ylln" path="res://audio/player/player_damage.wav" id="15_fcs02"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_0fvyk"]
 size = Vector2(12.75, 18)
@@ -465,6 +469,20 @@ position = Vector2(3, 0)
 [node name="CollisionShape2D" type="CollisionShape2D" parent="AnimatedSprite2D/Tongue/TongueArea"]
 position = Vector2(-2, 0)
 shape = SubResource("RectangleShape2D_smehm")
+
+[node name="Audio" type="Node" parent="."]
+
+[node name="Jump" type="AudioStreamPlayer" parent="Audio"]
+stream = ExtResource("12_fm80t")
+
+[node name="Shoot" type="AudioStreamPlayer" parent="Audio"]
+stream = ExtResource("13_gx1jg")
+
+[node name="Heal" type="AudioStreamPlayer" parent="Audio"]
+stream = ExtResource("14_ugbui")
+
+[node name="Damage" type="AudioStreamPlayer" parent="Audio"]
+stream = ExtResource("15_fcs02")
 
 [connection signal="area_entered" from="Area2D" to="." method="_on_area_2d_area_entered"]
 [connection signal="body_entered" from="Area2D" to="." method="_on_area_2d_body_entered"]
