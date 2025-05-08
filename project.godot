@@ -11,9 +11,13 @@ config_version=5
 [application]
 
 config/name="Frog Game"
-run/main_scene="res://scenes/levels/main_level.tscn"
+run/main_scene="uid://6isk4w2kanaa"
 config/features=PackedStringArray("4.4", "Forward Plus")
 config/icon="res://icon.svg"
+
+[autoload]
+
+MainMusic="*res://scenes/main_music.tscn"
 
 [display]
 

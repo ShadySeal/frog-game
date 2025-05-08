@@ -71,6 +71,7 @@ func fire() -> void:
 	projectile.dir = direction_to_player.angle()
 	projectile.pos = global_position
 	get_parent().add_child(projectile)
+	$Audio/Shoot.play()
 
 func _on_fire_timer_timeout() -> void:
 	if global_position.distance_to(player.global_position) <= fire_range:
@@ -110,4 +111,5 @@ func _on_area_2d_body_entered(body: Node2D) -> void:
 			kill()
 		elif body.is_in_group("Breakable"):
 			body.queue_free()
+			$Audio/Crumble.play()
 			kill()

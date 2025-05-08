@@ -1,0 +1,50 @@
+[gd_scene load_steps=4 format=3 uid="uid://cipxb7icqt4d8"]
+
+[ext_resource type="Script" uid="uid://ddbp3dds5twya" path="res://scripts/ui/victory.gd" id="1_hl81x"]
+[ext_resource type="FontFile" uid="uid://dv37iy115w6sr" path="res://fonts/rainyhearts.ttf" id="1_le47n"]
+[ext_resource type="AudioStream" uid="uid://w5jihh2lyui3" path="res://audio/music/victory.mp3" id="2_faxov"]
+
+[node name="Victory" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_hl81x")
+
+[node name="Panel" type="Panel" parent="."]
+layout_mode = 0
+offset_right = 320.0
+offset_bottom = 180.0
+
+[node name="Label" type="Label" parent="."]
+texture_filter = 1
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -66.5
+offset_top = -18.75
+offset_right = 66.5
+offset_bottom = 18.75
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0.945098, 0.941176, 0.913725, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("1_le47n")
+theme_override_font_sizes/font_size = 40
+text = "You Win!"
+horizontal_alignment = 1
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("2_faxov")
+autoplay = true
+
+[node name="Timer" type="Timer" parent="."]
+wait_time = 5.0
+autostart = true
+
+[connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]

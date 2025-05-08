@@ -1,4 +1,4 @@
-[gd_scene load_steps=38 format=3 uid="uid://brqwt8slfnbt6"]
+[gd_scene load_steps=41 format=3 uid="uid://brqwt8slfnbt6"]
 
 [ext_resource type="Script" uid="uid://dtv4g5abye6jg" path="res://scripts/player/player_movement.gd" id="1_263iy"]
 [ext_resource type="Texture2D" uid="uid://c5p05vxpaojq7" path="res://sprites/frog/frog_idle.png" id="2_cvnsp"]
@@ -6,6 +6,7 @@
 [ext_resource type="Texture2D" uid="uid://dwlrpwkjfsxoa" path="res://sprites/frog/frog_charge.png" id="3_vgqql"]
 [ext_resource type="Texture2D" uid="uid://dupoclmh2oek7" path="res://sprites/frog/frog_charge_loaded.png" id="4_d2wvv"]
 [ext_resource type="Texture2D" uid="uid://5qa0ppp80hlt" path="res://sprites/frog/frog_jump.png" id="4_fkybt"]
+[ext_resource type="Texture2D" uid="uid://dkkldaqa4viwi" path="res://sprites/frog/frog_dead.png" id="4_kvlxm"]
 [ext_resource type="Texture2D" uid="uid://nk43rund7wtx" path="res://sprites/frog/frog_idle_loaded.png" id="5_3v2ag"]
 [ext_resource type="Texture2D" uid="uid://ddyhfaen8iev5" path="res://sprites/frog/frog_shoot.png" id="5_fjrip"]
 [ext_resource type="Texture2D" uid="uid://bqode5cd5riv8" path="res://sprites/frog/frog_tongue.png" id="7_fjrip"]
@@ -16,6 +17,7 @@
 [ext_resource type="AudioStream" uid="uid://ddnhvqv1016vo" path="res://audio/player/player_heal.wav" id="14_ugbui"]
 [ext_resource type="AudioStream" uid="uid://b8a6nfvr3ylln" path="res://audio/player/player_damage.wav" id="15_fcs02"]
 [ext_resource type="AudioStream" uid="uid://cjwcn8r7b76mw" path="res://audio/player/emit.wav" id="16_myrg7"]
+[ext_resource type="AudioStream" uid="uid://cgynnviwrf4vi" path="res://audio/player/death.wav" id="18_uf5tr"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_0fvyk"]
 size = Vector2(12.75, 18)
@@ -297,11 +299,39 @@ tracks/1/keys = {
 "values": [0, 1]
 }
 
+[sub_resource type="Animation" id="Animation_uf5tr"]
+resource_name = "dead"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("AnimatedSprite2D:animation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [&"Dead"]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("AnimatedSprite2D:frame")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [0]
+}
+
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_3smsa"]
 _data = {
 &"RESET": SubResource("Animation_vgqql"),
 &"charge": SubResource("Animation_3smsa"),
 &"charge_loaded": SubResource("Animation_fulsm"),
+&"dead": SubResource("Animation_uf5tr"),
 &"idle": SubResource("Animation_fkybt"),
 &"idle_loaded": SubResource("Animation_oprun"),
 &"jump": SubResource("Animation_8erm5"),
@@ -355,6 +385,14 @@ animations = [{
 }],
 "loop": true,
 "name": &"Charge Loaded",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("4_kvlxm")
+}],
+"loop": true,
+"name": &"Dead",
 "speed": 5.0
 }, {
 "frames": [{
@@ -488,6 +526,17 @@ stream = ExtResource("15_fcs02")
 [node name="Emit" type="AudioStreamPlayer" parent="Audio"]
 stream = ExtResource("16_myrg7")
 
+[node name="Death" type="AudioStreamPlayer" parent="Audio"]
+stream = ExtResource("18_uf5tr")
+
+[node name="DamageColorTimer" type="Timer" parent="."]
+wait_time = 0.2
+
+[node name="RespawnTimer" type="Timer" parent="."]
+wait_time = 2.0
+
 [connection signal="area_entered" from="Area2D" to="." method="_on_area_2d_area_entered"]
 [connection signal="body_entered" from="Area2D" to="." method="_on_area_2d_body_entered"]
 [connection signal="area_entered" from="AnimatedSprite2D/Tongue/TongueArea" to="." method="_on_tongue_area_area_entered"]
+[connection signal="timeout" from="DamageColorTimer" to="." method="_on_damage_color_timer_timeout"]
+[connection signal="timeout" from="RespawnTimer" to="." method="_on_respawn_timer_timeout"]

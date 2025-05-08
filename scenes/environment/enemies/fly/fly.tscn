@@ -1,7 +1,9 @@
-[gd_scene load_steps=10 format=3 uid="uid://bikt5quqvokxt"]
+[gd_scene load_steps=12 format=3 uid="uid://bikt5quqvokxt"]
 
 [ext_resource type="Script" uid="uid://dlq5j8pvxqbef" path="res://scripts/environment/enemies/fly/fly.gd" id="1_1f0kj"]
 [ext_resource type="Texture2D" uid="uid://rtyicws5axl3" path="res://sprites/fly/fly_idle.png" id="2_md0e3"]
+[ext_resource type="AudioStream" uid="uid://b18h2do242ig6" path="res://audio/crumble.mp3" id="3_n3xp5"]
+[ext_resource type="AudioStream" uid="uid://csqeev4jhw6ts" path="res://audio/fly/fly_shoot.wav" id="4_hvg3e"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_kry3j"]
 size = Vector2(20, 18)
@@ -120,6 +122,14 @@ libraries = {
 &"": SubResource("AnimationLibrary_md484")
 }
 autoplay = "idle"
+
+[node name="Audio" type="Node" parent="."]
+
+[node name="Crumble" type="AudioStreamPlayer2D" parent="Audio"]
+stream = ExtResource("3_n3xp5")
+
+[node name="Shoot" type="AudioStreamPlayer2D" parent="Audio"]
+stream = ExtResource("4_hvg3e")
 
 [connection signal="area_entered" from="Area2D" to="." method="_on_area_2d_area_entered"]
 [connection signal="body_entered" from="Area2D" to="." method="_on_area_2d_body_entered"]

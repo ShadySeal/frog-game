@@ -35,7 +35,8 @@ var emitting_timer = 0.3
 enum State
 {
 	Normal,
-	Loaded
+	Loaded,
+	Dead
 }
 
 var current_state: State = State.Normal
@@ -45,63 +46,67 @@ func _ready() -> void:
 	animation_player = $PlayerAnimation
 	tongue = $AnimatedSprite2D/Tongue
 	health_bar.set_health_bar(health)
+	
+	if not MainMusic.playing:
+		MainMusic.play()
 
 func _physics_process(delta):
 	# Gravity
 	if not is_on_floor():
 		velocity.y += gravity * delta
+	
+	if current_state != State.Dead:
+		# Handle charging while on floor
+		if is_on_floor():
+			if Input.is_action_just_pressed("Jump"):
+				velocity.y = min_jump_velocity
+				$Audio/Jump.play()
+			
+			if Input.is_action_pressed("Crouch"):
+				charging_jump = true
+				jump_charge_time += delta
+				jump_charge_time = min(jump_charge_time, max_charge_time)
+				charge_percent = jump_charge_time / max_charge_time
+				animation_player.play("charge")
+				emit_signal("charge_updated", charge_percent)
+			elif Input.is_action_just_released("Crouch") and charging_jump:
+				emit_signal("charge_updated", charge_percent)
+				velocity.y = lerp(min_jump_velocity, max_jump_velocity, charge_percent)
+				charging_jump = false
+				jump_charge_time = 0.0
+				$Audio/Jump.play()
+			else:
+				# Reset if not holding
+				charging_jump = false
+				jump_charge_time = 0.0
+				charge_percent = 0.0
+				emit_signal("charge_updated", charge_percent)
 
-	# Handle charging while on floor
-	if is_on_floor():
-		if Input.is_action_just_pressed("Jump"):
-			velocity.y = min_jump_velocity
-			$Audio/Jump.play()
+		# Horizontal movement
+		direction = Input.get_axis("MoveLeft", "MoveRight")
+		if direction and not charging_jump:
+			velocity.x = direction * speed
+			animated_sprite.scale.x = direction
+		else:
+			velocity.x = move_toward(velocity.x, 0, speed)
 		
-		if Input.is_action_pressed("Crouch"):
-			charging_jump = true
-			jump_charge_time += delta
-			jump_charge_time = min(jump_charge_time, max_charge_time)
-			charge_percent = jump_charge_time / max_charge_time
-			animation_player.play("charge")
-			emit_signal("charge_updated", charge_percent)
-		elif Input.is_action_just_released("Crouch") and charging_jump:
-			emit_signal("charge_updated", charge_percent)
-			velocity.y = lerp(min_jump_velocity, max_jump_velocity, charge_percent)
-			charging_jump = false
-			jump_charge_time = 0.0
-			$Audio/Jump.play()
-		else:
-			# Reset if not holding
-			charging_jump = false
-			jump_charge_time = 0.0
-			charge_percent = 0.0
-			emit_signal("charge_updated", charge_percent)
-
-	# Horizontal movement
-	direction = Input.get_axis("MoveLeft", "MoveRight")
-	if direction and not charging_jump:
-		velocity.x = direction * speed
-		animated_sprite.scale.x = direction
-	else:
-		velocity.x = move_toward(velocity.x, 0, speed)
-	
-	if Input.is_action_just_pressed("Fire"):
-		if current_state == State.Normal:
-			$Audio/Shoot.play()
-			is_shooting = true
-		else:
+		if Input.is_action_just_pressed("Fire"):
+			if current_state == State.Normal:
+				$Audio/Shoot.play()
+				is_shooting = true
+			else:
+				shoot(delta)
+				$Audio/Emit.play()
+		
+		if is_shooting and not is_emitting:
 			shoot(delta)
-			$Audio/Emit.play()
-	
-	if is_shooting and not is_emitting:
-		shoot(delta)
-	
-	if is_emitting:
-		emitting_timer -= delta
-		if emitting_timer <= 0:
-			is_emitting = false
-			is_shooting = false
-			emitting_timer = 0.3
+		
+		if is_emitting:
+			emitting_timer -= delta
+			if emitting_timer <= 0:
+				is_emitting = false
+				is_shooting = false
+				emitting_timer = 0.3
 		
 	handle_animations()
 
@@ -132,6 +137,8 @@ func handle_animations() -> void:
 				animation_player.play("walk_loaded")
 			else:
 				animation_player.play("idle_loaded")
+		State.Dead:
+			animation_player.play("dead")
 
 func shoot(delta) -> void:
 	
@@ -161,11 +168,17 @@ func shoot(delta) -> void:
 			current_state = State.Normal
 
 func deal_damage(amount: float) -> void:
-	health -= amount
-	health_bar.change_health(health)
-	$Audio/Damage.play()
-	if health <= 0:
-		call_deferred("reload_scene")
+	if current_state != State.Dead:
+		health -= amount
+		health_bar.change_health(health)
+		$AnimatedSprite2D.modulate = Color(1, 0, 0)
+		$DamageColorTimer.start()
+		$Audio/Damage.play()
+		if health <= 0:
+			velocity.x = 0
+			$Audio/Death.play()
+			current_state = State.Dead
+			$RespawnTimer.start()
 		
 func heal(amount: float) -> void:
 	$Audio/Heal.play()
@@ -181,3 +194,9 @@ func _on_tongue_area_area_entered(area: Area2D) -> void:
 		captured_enemy = area.get_parent()
 		print(captured_enemy.name)
 		
+
+func _on_damage_color_timer_timeout() -> void:
+	$AnimatedSprite2D.modulate = Color(1, 1, 1)
+
+func _on_respawn_timer_timeout() -> void:
+	call_deferred("reload_scene")
